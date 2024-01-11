@@ -20,7 +20,9 @@ class AppTheme {
   ThemeData theme() {
     return ThemeData(
       colorSchemeSeed: primaryColor,
-      brightness: Brightness.dark
+      scaffoldBackgroundColor: const Color(0xff313131),
+      brightness: Brightness.dark,
+      
     );
   }
 }
