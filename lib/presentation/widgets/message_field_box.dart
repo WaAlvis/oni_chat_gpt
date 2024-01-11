@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:oni_chat_gpt/presentation/providers/chat_provider.dart';
+import 'package:provider/provider.dart';
 
 class MessageFieldBox extends StatefulWidget {
   const MessageFieldBox({super.key});
@@ -10,12 +12,13 @@ class MessageFieldBox extends StatefulWidget {
 class _MessageFieldBoxState extends State<MessageFieldBox> {
   final textController = TextEditingController();
   final focusNode = FocusNode();
-  
+
   @override
   void initState() {
     super.initState();
     focusNode.addListener(() => setState(() {}));
   }
+
   @override
   void dispose() {
     textController.dispose();
@@ -25,9 +28,11 @@ class _MessageFieldBoxState extends State<MessageFieldBox> {
 
   @override
   Widget build(BuildContext context) {
+    final chatProvider = context.read<ChatProvider>();
+
     final outlineInputBorder = OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.transparent),
-        borderRadius: BorderRadius.circular(5));
+      borderRadius: BorderRadius.circular(5),
+    );
 
     final inputDecoration = InputDecoration(
       hintText: 'Message ONI...',
@@ -37,21 +42,9 @@ class _MessageFieldBoxState extends State<MessageFieldBox> {
       fillColor: focusNode.hasFocus
           ? const Color(0xff1d1d1d)
           : const Color(0xff707070),
-      focusColor: Colors.red,
-      suffixIcon: Padding(
-        padding: const EdgeInsets.only(right: 10),
-        child: FloatingActionButton.small(
-          backgroundColor: focusNode.hasFocus
-              ? const Color(0xfffcc755)
-              : const Color(0xff313131),
-          foregroundColor: const Color(0xff1d1d1d),
-          child: const Icon(Icons.arrow_upward_outlined),
-          onPressed: () {
-            final textValue = textController.value.text;
-            print('button: $textValue');
-            textController.clear();
-          },
-        ),
+      suffixIcon: SendIcon(
+        focusNode: focusNode,
+        textController: textController,
       ),
     );
 
@@ -62,14 +55,45 @@ class _MessageFieldBoxState extends State<MessageFieldBox> {
       focusNode: focusNode,
       controller: textController,
       decoration: inputDecoration,
-      onChanged: (value) {
-        print('onChanged : $value');
-      },
       onFieldSubmitted: (value) {
         print('Submit value $value');
         textController.clear();
+        chatProvider.sendMessage(value);
         focusNode.requestFocus();
       },
+    );
+  }
+}
+
+class SendIcon extends StatelessWidget {
+  const SendIcon({
+    super.key,
+    required this.focusNode,
+    required this.textController,
+  });
+
+  final FocusNode focusNode;
+  final TextEditingController textController;
+
+  @override
+  Widget build(BuildContext context) {
+    final chatProvider = context.read<ChatProvider>();
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: FloatingActionButton.small(
+        backgroundColor: focusNode.hasFocus
+            ? const Color(0xfffcc755)
+            : const Color(0xff313131),
+        foregroundColor: const Color(0xff1d1d1d),
+        child: const Icon(Icons.arrow_upward_outlined),
+        onPressed: () {
+          final textValue = textController.value.text;
+          print('button: $textValue');
+          chatProvider.sendMessage(textValue);
+          textController.clear();
+        },
+      ),
     );
   }
 }

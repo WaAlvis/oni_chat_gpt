@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-
-enum Sender { user, oni }
+import 'package:oni_chat_gpt/domain/entities/message.dart';
 
 class MessageBubble extends StatelessWidget {
-  final Sender sender;
+  final FromWho fromWho;
+  final String message;
 
-  const MessageBubble({super.key, required this.sender});
+  const MessageBubble({super.key, required this.fromWho, required this.message});
 
   @override
   Widget build(BuildContext context) {
-    // final textTheme = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: EdgeInsets.only(top: 10,bottom: 10,
+      padding: EdgeInsets.only(
+        top: 10,
+        bottom: 10,
         right: (size.width > 1080) ? 150 : 40,
       ),
       child: Row(
@@ -21,7 +22,7 @@ class MessageBubble extends StatelessWidget {
         children: [
           CircleAvatar(
             child: ClipOval(
-              child: (sender == Sender.user)
+              child: (fromWho == FromWho.user)
                   ? Image.network(
                       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOYjs3zDA9mA1DqDKDch1DPuTDBG87OuAKhgMYrN_dxqBQ8PZAu2ehyPjUnzevS96X120&usqp=CAU',
                     )
@@ -40,13 +41,7 @@ class MessageBubble extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                 ),
                 Text(
-                  sender == Sender.user
-                      ? 'Who is Ed Rodriguez?'
-                      : '''Aliqua veniam proident eu exercitation eu anim officia sit dolor consequat aute. Voluptate consequat proident dolore eu ullamco in ad excepteur aute amet magna ullamco occaecat. Voluptate esse nostrud minim in exercitation. Sint eu est dolore culpa sunt consectetur quis tempor reprehenderit cillum est id id laborum.
-
-Ea laborum nulla officia esse ut minim commodo sunt do. Voluptate aliqua eu laborum commodo qui ullamco qui nisi. Enim ad aute Lorem laborum ea aute labore. Elit sunt eu incididunt laborum in ut. Non aute ad excepteur ut ea nulla minim.
-
-Irure ad ea culpa ea exercitation cillum laborum ex deserunt excepteur excepteur adipisicing eiusmod. Reprehenderit enim officia voluptate velit exercitation eiusmod incididunt dolore enim. Ullamco laborum id nisi mollit cupidatat occaecat mollit magna. Et esse commodo ex ad cillum. Aliqua labore eiusmod in culpa ad et deserunt enim proident et quis enim magna enim.''',
+                  message,
                   style: const TextStyle(fontSize: 12, height: 2),
                 ),
               ],
