@@ -38,6 +38,7 @@ class ChatView extends StatelessWidget {
             const SizedBox(
               height: 40,
             ),
+
             /// Caja de texto de mensajes
             const MessageFieldBox(),
           ],
@@ -93,9 +94,9 @@ class ChatListOni extends StatelessWidget {
         return MessageBubble(
           fromWho: message.fromWho,
           message: message.text,
+          indexMsj: index,
         );
       },
     );
   }
 }
-

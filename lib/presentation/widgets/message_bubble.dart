@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:oni_chat_gpt/domain/entities/message.dart';
+import 'package:oni_chat_gpt/presentation/providers/chat_provider.dart';
+import 'package:provider/provider.dart';
 
 class MessageBubble extends StatelessWidget {
   final FromWho fromWho;
   final String message;
+  final int indexMsj;
 
-  const MessageBubble({super.key, required this.fromWho, required this.message});
+  const MessageBubble(
+      {super.key,
+      required this.fromWho,
+      required this.message,
+      required this.indexMsj});
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
+    final chatProvider = context.read<ChatProvider>();
     return Padding(
       padding: EdgeInsets.only(
         top: 10,
@@ -26,7 +33,11 @@ class MessageBubble extends StatelessWidget {
                   ? Image.network(
                       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOYjs3zDA9mA1DqDKDch1DPuTDBG87OuAKhgMYrN_dxqBQ8PZAu2ehyPjUnzevS96X120&usqp=CAU',
                     )
-                  : Image.asset('assets/images/oni.gif'),
+                  : Image.asset(
+                      chatProvider.messageList.length - 1 == indexMsj
+                          ? 'assets/images/oni.gif'
+                          : 'assets/images/static_oni.gif',
+                    ),
             ),
           ),
           const SizedBox(
@@ -36,9 +47,10 @@ class MessageBubble extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'You',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                Text(
+                  FromWho.user == fromWho ? 'You' : 'ONI',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 12),
                 ),
                 Text(
                   message,
