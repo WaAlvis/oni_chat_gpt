@@ -85,6 +85,7 @@ class ChatListOni extends StatelessWidget {
     final chatProvider = context.watch<ChatProvider>();
 
     return ListView.builder(
+      controller: chatProvider.chatScrollController,
       itemCount: chatProvider.messageList.length,
       itemBuilder: (_, int index) {
         final message = chatProvider.messageList[index];
