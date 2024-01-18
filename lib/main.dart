@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:oni_chat_gpt/config/router/app_router.dart';
 import 'package:oni_chat_gpt/config/theme/app_theme.dart';
 import 'package:oni_chat_gpt/presentation/providers/chat_provider.dart';
 import 'package:provider/provider.dart';
-
-import 'presentation/chat/chat_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -18,11 +17,11 @@ class MyApp extends StatelessWidget {
           create: (_) => ChatProvider(),
         )
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'ONI chat',
         theme: AppTheme().theme(),
-        home: const ChatScreen(),
+        routerConfig: appRouter,
       ),
     );
   }

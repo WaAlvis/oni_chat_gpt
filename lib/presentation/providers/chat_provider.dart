@@ -6,6 +6,11 @@ class ChatProvider extends ChangeNotifier {
   final chatScrollController = ScrollController();
   List<Message> messageList = [];
 
+  Future<void> newChatOni() async {
+    messageList.clear();
+    notifyListeners();
+  }
+
   Future<void> sendMessage(String text) async {
     if (text.isEmpty) return;
 

@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:oni_chat_gpt/presentation/providers/chat_provider.dart';
-import 'package:oni_chat_gpt/presentation/widgets/message_bubble.dart';
+import 'package:oni_chat_gpt/presentation/widgets/widgets.dart';
 import 'package:provider/provider.dart';
-
-import '../widgets/message_field_box.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
 
+  static const name = 'chat-screen';
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: ChatView(),
+
+    return Scaffold(
+      appBar: AppBar(),
+      body: const ChatView(),
+      drawer: const SideMenu(),
     );
   }
 }
