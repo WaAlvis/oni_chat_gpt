@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:oni_chat_gpt/domain/datasources/chat_message_datasource.dart';
-import 'package:oni_chat_gpt/domain/repositories/chat_message_repository.dart';
 import 'package:oni_chat_gpt/infrastructure/repositories/chat_repository_impl.dart';
 
 import '../../domain/entities/message.dart';
@@ -21,8 +19,9 @@ class ChatProvider extends ChangeNotifier {
     await chatRepositiryImpl.startSessionChat();
   }
 
-  Future<void> newChatOni() async {
+  void newChatOni() async {
     messageList.clear();
+    newSessionChat();
     notifyListeners();
   }
 

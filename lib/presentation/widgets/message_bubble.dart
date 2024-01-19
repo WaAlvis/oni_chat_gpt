@@ -17,7 +17,8 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final chatProvider = context.read<ChatProvider>();
+    final chatProvider = context.watch<ChatProvider>();
+
     return Padding(
       padding: EdgeInsets.only(
         top: 10,
