@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oni_chat_gpt/domain/entities/message.dart';
 import 'package:oni_chat_gpt/presentation/providers/chat_provider.dart';
 import 'package:oni_chat_gpt/presentation/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -87,18 +88,33 @@ class ChatListOni extends StatelessWidget {
   Widget build(BuildContext context) {
     final chatProvider = context.watch<ChatProvider>();
 
-    return ListView.builder(
-      controller: chatProvider.chatScrollController,
-      itemCount: chatProvider.messageList.length,
-      itemBuilder: (_, int index) {
-        final message = chatProvider.messageList[index];
-
-        return MessageBubble(
-          fromWho: message.fromWho,
-          message: message.text,
-          indexMsj: index,
-        );
-      },
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Flexible(
+          child: ListView.builder(
+            shrinkWrap: true,
+            controller: chatProvider.chatScrollController,
+            itemCount: chatProvider.messageList.length,
+            itemBuilder: (_, int index) {
+              final message = chatProvider.messageList[index];
+          
+              return MessageBubble(
+                fromWho: message.fromWho,
+                message: message.text,
+                indexMsj: index,
+              );
+            },
+          ),
+        ),
+        if (chatProvider.loadingResponseOni) 
+        MessageBubble(
+          fromWho: FromWho.oni,
+          message: '...',
+          indexMsj: chatProvider.messageList.length-1,
+        )
+      ],
     );
   }
 }

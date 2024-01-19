@@ -11,6 +11,7 @@ class ChatProvider extends ChangeNotifier {
   });
 
   final chatScrollController = ScrollController();
+  bool loadingResponseOni = false;
 
   List<Message> messageList = [];
 
@@ -48,9 +49,13 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> oniReply(String question) async {
+    //TODO: resolver scroll espera de mensage
+    loadingResponseOni = true;
+
     final Message newMessageOni = await chatRepositiryImpl.getMessage(question);
 
     messageList.add(newMessageOni);
+    loadingResponseOni = false;
 
     notifyListeners();
     moveScrollToBottom();
