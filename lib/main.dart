@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:oni_chat_gpt/config/router/app_router.dart';
 import 'package:oni_chat_gpt/config/theme/app_theme.dart';
+import 'package:oni_chat_gpt/infrastructure/datasources/onr_db_datasource.dart';
+import 'package:oni_chat_gpt/infrastructure/repositories/chat_repository_impl.dart';
 import 'package:oni_chat_gpt/presentation/providers/chat_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,10 +13,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final chatRepositiryImpl =
+        ChatRepositiryImpl(chatMessageDatasource: OnrDbDatasource());
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => ChatProvider(),
+          lazy: false,
+          create: (_) => ChatProvider(chatRepositiryImpl: chatRepositiryImpl)..newSessionChat(),
         )
       ],
       child: MaterialApp.router(

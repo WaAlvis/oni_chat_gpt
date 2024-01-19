@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:oni_chat_gpt/domain/datasources/chat_message_datasource.dart';
+import 'package:oni_chat_gpt/domain/repositories/chat_message_repository.dart';
+import 'package:oni_chat_gpt/infrastructure/repositories/chat_repository_impl.dart';
 
 import '../../domain/entities/message.dart';
 
 class ChatProvider extends ChangeNotifier {
+  final ChatRepositiryImpl chatRepositiryImpl;
+
+  ChatProvider({
+    required this.chatRepositiryImpl,
+  });
+
   final chatScrollController = ScrollController();
+
   List<Message> messageList = [];
+
+  Future<void> newSessionChat() async {
+    // get ids Sessions (assitant and thread)
+    await chatRepositiryImpl.startSessionChat();
+  }
 
   Future<void> newChatOni() async {
     messageList.clear();
@@ -17,9 +32,7 @@ class ChatProvider extends ChangeNotifier {
     final newMessage = Message(text: text, fromWho: FromWho.user);
     messageList.add(newMessage);
 
-    if (text.endsWith('?')) {
-      oniReply();
-    }
+    oniReply(text);
 
     notifyListeners();
     moveScrollToBottom();
@@ -35,37 +48,12 @@ class ChatProvider extends ChangeNotifier {
     );
   }
 
-  int countMessage = 0;
-  Future<void> oniReply() async {
-    await Future.delayed(const Duration(milliseconds: 800));
+  Future<void> oniReply(String question) async {
+    final Message newMessageOni = await chatRepositiryImpl.getMessage(question);
 
-    countMessage == 3 ? countMessage = 0 : countMessage;
-    messageList.add(msjRamdomOni[countMessage]);
-    countMessage++;
+    messageList.add(newMessageOni);
 
     notifyListeners();
     moveScrollToBottom();
   }
-
-  List<Message> msjRamdomOni = [
-    Message(
-        text: 'Ipsum proident velit consectetur consectetur veniam eu irure.',
-        fromWho: FromWho.oni),
-    Message(
-        text:
-            'Sint nulla ad incididunt culpa ut. Non ad laborum pariatur cillum adipisicing duis velit ut culpa adipisicing deserunt irure culpa. Laboris eiusmod id duis quis laborum nulla consectetur adipisicing non reprehenderit. Cupidatat tempor sit proident consectetur nostrud anim minim ea pariatur. Ipsum proident velit consectetur consectetur veniam eu irure.',
-        fromWho: FromWho.oni),
-    Message(
-        text:
-            '''Sint nulla ad incididunt culpa ut. Non ad laborum pariatur cillum adipisicing duis velit ut culpa adipisicing deserunt irure culpa. Laboris eiusmod id duis quis laborum nulla consectetur adipisicing non reprehenderit. Cupidatat tempor sit proident consectetur nostrud anim minim ea pariatur. Ipsum proident velit consectetur consectetur veniam eu irure.
-
-Quis est mollit est ut veniam laboris nulla tempor labore et et ad. Id voluptate mollit sunt incididunt irure. Sint cupidatat ipsum dolore proident commodo occaecat magna voluptate deserunt Lorem dolore veniam. Esse fugiat exercitation deserunt nostrud. Laboris velit ipsum amet veniam labore minim excepteur dolor ut aliquip eu anim minim quis.
-
-Adipisicing et culpa adipisicing labore aliquip proident eiusmod excepteur duis excepteur reprehenderit nostrud ipsum ut. Deserunt dolore exercitation aliqua cillum aliqua occaecat nisi sint voluptate excepteur. Deserunt sunt ex magna adipisicing non velit anim dolore.
-
-Adipisicing dolor elit laborum deserunt in velit nisi. Ut proident commodo aliqua id irure. Occaecat consectetur est est quis non aliquip pariatur ipsum ex proident mollit culpa. Laborum laborum id exercitation id ipsum nostrud sint sunt duis. Mollit amet velit labore proident esse.
-
-Aliquip cillum proident veniam irure sunt minim culpa cupidatat. Sint magna eu consectetur nulla officia cillum esse. Occaecat in commodo dolor nulla labore. Qui do non do est consectetur ipsum officia.''',
-        fromWho: FromWho.oni),
-  ];
 }
