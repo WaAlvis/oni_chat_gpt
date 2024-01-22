@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:oni_chat_gpt/domain/entities/message.dart';
 import 'package:oni_chat_gpt/presentation/providers/chat_provider.dart';
 import 'package:oni_chat_gpt/presentation/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -108,12 +107,6 @@ class ChatListOni extends StatelessWidget {
             },
           ),
         ),
-        if (chatProvider.loadingResponseOni) 
-        MessageBubble(
-          fromWho: FromWho.oni,
-          message: '...',
-          indexMsj: chatProvider.messageList.length-1,
-        )
       ],
     );
   }
