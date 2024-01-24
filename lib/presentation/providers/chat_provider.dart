@@ -5,10 +5,12 @@ import '../../domain/entities/message.dart';
 
 class ChatProvider extends ChangeNotifier {
   final ChatRepositiryImpl chatRepositiryImpl;
+  bool isLoading = false;
 
   ChatProvider({
     required this.chatRepositiryImpl,
   });
+
 
   final chatScrollController = ScrollController();
 
@@ -48,15 +50,18 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> oniReply(String question) async {
+    isLoading = true;
+
     final loadingMsgOni = Message(text: '...', fromWho: FromWho.oni);
     messageList.add(loadingMsgOni);
 
     moveScrollToBottom();
-    // notifyListeners();
+    notifyListeners();
 
     final Message newMessageOni = await chatRepositiryImpl.getMessage(question);
     messageList.removeLast();
     messageList.add(newMessageOni);
+    isLoading = false;
 
     notifyListeners();
     moveScrollToBottom();

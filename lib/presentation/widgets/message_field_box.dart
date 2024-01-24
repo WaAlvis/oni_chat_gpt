@@ -28,7 +28,7 @@ class _MessageFieldBoxState extends State<MessageFieldBox> {
 
   @override
   Widget build(BuildContext context) {
-    final chatProvider = context.read<ChatProvider>();
+    final chatProvider = context.watch<ChatProvider>();
 
     final outlineInputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(5),
@@ -54,13 +54,16 @@ class _MessageFieldBoxState extends State<MessageFieldBox> {
       },
       focusNode: focusNode,
       controller: textController,
+      textInputAction: TextInputAction.send,
       decoration: inputDecoration,
-      onFieldSubmitted: (value) {
-        print('Submit value $value');
-        textController.clear();
-        chatProvider.sendMessage(value);
-        focusNode.requestFocus();
-      },
+      onFieldSubmitted: chatProvider.isLoading
+          ? (_) => focusNode.requestFocus()
+          : (value) {
+              print('Submit value $value');
+              chatProvider.sendMessage(value);
+              focusNode.requestFocus();
+              textController.clear();
+            },
     );
   }
 }
@@ -77,22 +80,24 @@ class SendIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chatProvider = context.read<ChatProvider>();
+    final chatProvider = context.watch<ChatProvider>();
 
     return Padding(
-      padding: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.only(right: 10, left: 4),
       child: FloatingActionButton.small(
-        backgroundColor: focusNode.hasFocus
+        backgroundColor: !chatProvider.isLoading && focusNode.hasFocus
             ? const Color(0xfffcc755)
             : const Color(0xff313131),
         foregroundColor: const Color(0xff1d1d1d),
+        onPressed: chatProvider.isLoading
+            ? null
+            : () {
+                final textValue = textController.value.text;
+                print('button: $textValue');
+                chatProvider.sendMessage(textValue);
+                textController.clear();
+              },
         child: const Icon(Icons.arrow_upward_outlined),
-        onPressed: () {
-          final textValue = textController.value.text;
-          print('button: $textValue');
-          chatProvider.sendMessage(textValue);
-          textController.clear();
-        },
       ),
     );
   }
