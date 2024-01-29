@@ -8,7 +8,8 @@ import 'package:dio/dio.dart';
 
 class OnrDbDatasource extends ChatMessageDatasource {
   final dio = Dio(BaseOptions(
-    baseUrl: 'http://localhost:3000/api/v1',
+    // baseUrl: 'http://localhost:3000/api/v1', // local
+    baseUrl: 'http://aws-oni-back-dev-env.eba-q6pdvkec.us-east-1.elasticbeanstalk.com/api/v1',
   ));
   final String assitantId = 'asst_xsWGv7zVctrFJLoefNxfu82l';
   late SessionOnr session;
