@@ -11,7 +11,6 @@ class ChatProvider extends ChangeNotifier {
     required this.chatRepositiryImpl,
   });
 
-
   final chatScrollController = ScrollController();
 
   List<Message> messageList = [];
@@ -22,6 +21,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   void newChatOni() async {
+    isLoading = false;
     messageList.clear();
     newSessionChat();
     notifyListeners();
@@ -59,11 +59,43 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
 
     final Message newMessageOni = await chatRepositiryImpl.getMessage(question);
-    messageList.removeLast();
-    messageList.add(newMessageOni);
+    print('*** Se obtuvo respuesta de ONI ***');
+
+    // Validacion para el primer mensaje despues del reinicio del Chat
+    if (messageList.length >= 2) {
+      messageList.removeLast(); // Remove the loading ONI
+      messageList.add(newMessageOni);
+      moveScrollToBottom();
+    }
+
     isLoading = false;
 
     notifyListeners();
-    moveScrollToBottom();
   }
 }
+
+//sugerencia chat GPT
+// Future<void> oniReply(String question) async {
+//   isLoading = true;
+
+//   final loadingMsgOni = Message(text: '...', fromWho: FromWho.oni);
+
+//   if (!chatReset) {
+//     messageList.add(loadingMsgOni);
+//     moveScrollToBottom();
+//     notifyListeners();
+//   }
+
+//   final Message newMessageOni = await chatRepositiryImpl.getMessage(question);
+
+//   if (!chatReset) {
+//     messageList.removeLast(); // Remove the loading message
+//     messageList.add(newMessageOni);
+//     moveScrollToBottom();
+//   }
+
+//   isLoading = false;
+//   chatReset = false; // Reset the chat reset flag
+
+//   notifyListeners();
+// }

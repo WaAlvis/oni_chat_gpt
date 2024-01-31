@@ -32,7 +32,7 @@ class OnrDbDatasource extends ChatMessageDatasource {
     final response = await dio.post('/assistant/createSession/$assitantId');
 
     session = SessionOnr.fromJson(response.data);
-    print('Session: ${session.threadId}');
+    // print('Session: ${session.threadId}');
     return SessionMapper.sessionToEntity(session);
   }
 }
