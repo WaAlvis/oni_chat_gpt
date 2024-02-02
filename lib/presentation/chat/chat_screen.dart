@@ -58,22 +58,78 @@ class EmptyChatOni extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircleAvatar(
-          radius: 50,
-          child: ClipOval(
-            child: Image.asset('assets/images/oni.gif'),
+        Flexible(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 50,
+                child: ClipOval(
+                  child: Image.asset('assets/images/oni.gif'),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                'Hi I\'m ONI!\nHow can I help you today?',
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
-        const SizedBox(
-          height: 10,
-        ),
-        const Text(
-          'Hi I\'m ONI!\nHow can I help you today?',
-          textAlign: TextAlign.center,
+        const Align(
+          alignment: Alignment.bottomCenter,
+          child: _SectionRelevantTopics(),
         )
       ],
+    );
+  }
+}
+
+class _SectionRelevantTopics extends StatelessWidget {
+  const _SectionRelevantTopics();
+
+  @override
+  Widget build(BuildContext context) {
+    final List<String> relevantTopics = [
+      'what are the minimum requirements for approvals of house exterior paint?',
+      'What are the main function of the architectural control committe?',
+      'What are the latest events of the association?',
+    ];
+
+    return Wrap(
+      children: relevantTopics.map((e) => _TopicKeyButton(e)).toList(),
+    );
+  }
+}
+
+class _TopicKeyButton extends StatelessWidget {
+  const _TopicKeyButton(this.questionText);
+
+  final String questionText;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final outlineStyle = OutlinedButton.styleFrom(
+      fixedSize: const Size(500, 60),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18.0),
+      ),
+    );
+    
+    return Container(
+      margin: const EdgeInsets.all(4),
+      child: OutlinedButton(
+        style: outlineStyle,
+        onPressed: () => context.read<ChatProvider>().sendMessage(questionText),
+        child: Text(
+          questionText,
+          // style: textTheme.bodyLarge,
+        ),
+      ),
     );
   }
 }
@@ -98,7 +154,7 @@ class ChatListOni extends StatelessWidget {
             itemCount: chatProvider.messageList.length,
             itemBuilder: (_, int index) {
               final message = chatProvider.messageList[index];
-          
+
               return MessageBubble(
                 fromWho: message.fromWho,
                 message: message.text,
