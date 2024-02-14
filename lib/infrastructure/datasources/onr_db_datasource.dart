@@ -28,7 +28,7 @@ class OnrDbDatasource extends ChatMessageDatasource {
   }
 
   @override
-  Future<SessionThread> startSessionChat() async {
+  Future<SessionThreadGPT> startSessionChat() async {
     final response = await dio.post('/assistant/createSession/$assitantId');
 
     session = SessionOnr.fromJson(response.data);

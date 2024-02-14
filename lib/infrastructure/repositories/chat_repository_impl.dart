@@ -16,7 +16,7 @@ class ChatRepositiryImpl extends ChatMessageRepository {
   }
 
   @override
-  Future<SessionThread> startSessionChat() {
+  Future<SessionThreadGPT> startSessionChat() {
     return chatMessageDatasource.startSessionChat();
   }
 }

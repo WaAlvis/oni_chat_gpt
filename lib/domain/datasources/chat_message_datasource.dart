@@ -3,5 +3,5 @@ import 'package:oni_chat_gpt/domain/entities/session_thread.dart';
 
 abstract class ChatMessageDatasource {
   Future<Message> getMessage(String question);
-  Future<SessionThread> startSessionChat();
+  Future<SessionThreadGPT> startSessionChat();
 }

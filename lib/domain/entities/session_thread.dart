@@ -1,8 +1,8 @@
-class SessionThread {
+class SessionThreadGPT {
   final String assitantId;
   final String threadId;
 
-  SessionThread({
+  SessionThreadGPT({
     required this.assitantId,
     required this.threadId,
   });
